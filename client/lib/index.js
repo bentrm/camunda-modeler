@@ -16,7 +16,8 @@ var Config = require('external/config'),
     Logger = require('base/logger'),
     Menu = require('external/window-menu'),
     ContextMenu = require('external/context-menu'),
-    Workspace = require('external/workspace');
+    Workspace = require('external/workspace'),
+    Plugins = require('external/plugins');
 
 var App = require('./app');
 
@@ -33,15 +34,6 @@ Delegator();
 domReady(function() {
   var events = new Events();
 
-  var pluginsManager = require('electron').remote.app.pluginsManager;
-
-  var plugins = pluginsManager.getStyles();
-  plugins.forEach(style => {
-    document.head.appendChild(require('domify')(style));
-  });
-
-  console.log('---> ', plugins);
-
   var app = new App({
     config: new Config(),
     dialog: new Dialog(events),
@@ -49,6 +41,7 @@ domReady(function() {
     fileSystem: new FileSystem(),
     logger: new Logger(),
     workspace: new Workspace(),
+    plugins: new Plugins().load(),
     metaData: metaData
   });
 

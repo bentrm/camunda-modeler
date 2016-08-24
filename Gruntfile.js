@@ -67,6 +67,10 @@ module.exports = function(grunt) {
       client: {
         src: 'client/lib/index.js',
         target: 'public/index.js'
+      },
+      plugin: {
+        src: '../bpmn-js-transaction-boundaries/plugin.js',
+        target: 'plugins/plugin-combo/camunda-modeler-plugin.js'
       }
     },
 
@@ -210,6 +214,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build-client', [
     'clean:client',
     'browserify:client',
+    'browserify:plugin',
     'less',
     'copy'
   ]);
@@ -234,6 +239,7 @@ module.exports = function(grunt) {
   grunt.registerTask('auto-build', [
     'clean:client',
     'browserify:client:watch',
+    'browserify:plugin:watch',
     'less',
     'copy',
     'app:start',

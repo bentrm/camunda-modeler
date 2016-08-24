@@ -48,6 +48,7 @@ function App(options) {
     'dialog',
     'fileSystem',
     'config',
+    'plugins',
     'metaData'
   ], options);
 

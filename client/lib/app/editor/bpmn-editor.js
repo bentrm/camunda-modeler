@@ -314,20 +314,29 @@ BpmnEditor.prototype.createModeler = function($el, $propertiesEl) {
     'config.propertiesPanel': [ 'value', { parent: $propertiesEl } ]
   };
 
-  return new BpmnJS({
+  var additionalModules = [
+    clipboardModule,
+    diagramOriginModule,
+    executableFixModule,
+    propertiesPanelModule,
+    propertiesProviderModule,
+    propertiesPanelConfig
+  ];
+
+  var plugins = window.plugins || [];
+  console.log('-----> Plugins: ', window.plugins);
+
+  additionalModules = additionalModules.concat(plugins);
+
+  var modeler =  new BpmnJS({
     container: $el,
     position: 'absolute',
-    additionalModules: [
-      clipboardModule,
-      diagramOriginModule,
-      executableFixModule,
-      propertiesPanelModule,
-      propertiesProviderModule,
-      propertiesPanelConfig
-    ],
+    additionalModules: additionalModules,
     elementTemplates: elementTemplates,
     moddleExtensions: { camunda: camundaModdlePackage }
   });
+
+  return modeler;
 };
 
 BpmnEditor.prototype.exportAs = function(type, done) {
