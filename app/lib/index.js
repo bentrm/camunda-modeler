@@ -23,12 +23,17 @@ var Platform = require('./platform'),
     Workspace = require('./workspace'),
     Dialog = require('./dialog'),
     Menu = require('./menu'),
-    Cli = require('./cli');
+    Cli = require('./cli'),
+    PluginsManager = require('./plugin-manager');
 
 var browserOpen = require('./util/browser-open'),
     renderer = require('./util/renderer');
 
 var config = Config.load(path.join(app.getPath('userData'), 'config.json'));
+
+app.pluginsManager = new PluginsManager({
+  path: '/Users/vlka/repos/bpmn-io/camunda-modeler/plugins'
+});
 
 Platform.create(process.platform, app, config);
 

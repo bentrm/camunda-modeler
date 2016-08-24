@@ -1,0 +1,4 @@
+body::before {
+  content: 'Drink more 🍺 and be 💪!';
+  font-size: 5em;
+}

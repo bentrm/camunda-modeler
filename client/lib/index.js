@@ -33,6 +33,15 @@ Delegator();
 domReady(function() {
   var events = new Events();
 
+  var pluginsManager = require('electron').remote.app.pluginsManager;
+
+  var plugins = pluginsManager.getStyles();
+  plugins.forEach(style => {
+    document.head.appendChild(require('domify')(style));
+  });
+
+  console.log('---> ', plugins);
+
   var app = new App({
     config: new Config(),
     dialog: new Dialog(events),
