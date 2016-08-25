@@ -31,14 +31,6 @@ var browserOpen = require('./util/browser-open'),
 
 var config = Config.load(path.join(app.getPath('userData'), 'config.json'));
 
-app.pluginsManager = new PluginsManager({
-  paths: [
-    app.getPath('userData'),
-    path.dirname(app.getPath('exe')),
-    process.cwd()
-  ]
-});
-
 Platform.create(process.platform, app, config);
 
 // variable for developing (reloading and devtools toggling)
@@ -53,11 +45,23 @@ global.metaData = {
   name: app.name
 };
 
+var pluginsManager = app.pluginsManager = new PluginsManager({
+  paths: [
+    app.getPath('userData'),
+    path.dirname(app.getPath('exe')),
+    process.cwd()
+  ]
+});
+
 // bootstrap the application's menus
 //
 // TODO(nikku): remove app.menu binding when development
 // mode bootstrap issue is fixed in electron-connect
-app.menu = new Menu(process.platform);
+app.menu = new Menu(process.platform,
+  pluginsManager.getPlugins()
+    .filter(p => p.menu)
+    .map(p => p.menu)
+  );
 
 // bootstrap workspace behavior
 new Workspace(config);

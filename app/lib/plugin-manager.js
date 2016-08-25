@@ -29,6 +29,10 @@ function PluginsManager(options) {
         plugin.script = path.join(pluginPath, descriptor.script);
       }
 
+      if (descriptor.menu) {
+        plugin.menu = descriptor.menu;
+      }
+
       return plugin;
     });
 }
