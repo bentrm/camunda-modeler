@@ -1291,6 +1291,7 @@ App.prototype.run = function() {
 
   // initialization sequence
   //
+  // (-1) load plugins
   // (0) select empty tab
   // (1) load configuration
   // (2) restore workspace
@@ -1298,20 +1299,24 @@ App.prototype.run = function() {
 
   this.selectTab(this.tabs[0]);
 
-  this.loadConfig((err) => {
+  this.plugins.load(() => {
 
-    if (err) {
-      this.logger.warn('Failed to load config', err);
-    }
+    this.loadConfig((err) => {
 
-    this.restoreWorkspace((err) => {
       if (err) {
-        debug('workspace restore error', err);
-      } else {
-        debug('workspace restored');
+        this.logger.warn('Failed to load config', err);
       }
-      this.events.emit('ready');
+
+      this.restoreWorkspace((err) => {
+        if (err) {
+          debug('workspace restore error', err);
+        } else {
+          debug('workspace restored');
+        }
+        this.events.emit('ready');
+      });
     });
+
   });
 
   this.events.emit('changed');

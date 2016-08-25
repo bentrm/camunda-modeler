@@ -3,10 +3,18 @@
 var path = require('path'),
     glob = require('glob');
 
-function PluginsManager(options = {}) {
-  this.options = options;
+/**
+ * Searches and stores information about plugin bundles.
+ * Options:
+ *   paths - array of locations where to search for 'plugins' folder
+ *           and 'camunda-modeler.js' descriptors
+ *
+ * @param {Object} options
+ */
+function PluginsManager(options) {
+  this.options = options || {};
 
-  this.plugins = findPlugins(options.path)
+  this.plugins = findPlugins(options.paths)
     .map(p => {
       let descriptor = require(p);
       let pluginPath = path.dirname(p);
@@ -29,15 +37,23 @@ PluginsManager.prototype.getPlugins = function() {
   return this.plugins;
 };
 
-function findPlugins(path) {
+function findPlugins(paths) {
 
-  var globOptions = {
-    cwd: path,
-    nodir: true,
-    realpath: true
-  };
+  var plugins = [];
 
-  return glob.sync('**/camunda-modeler.js', globOptions);
+  paths.forEach(path => {
+    var globOptions = {
+      cwd: path,
+      nodir: true,
+      realpath: true
+    };
+
+    var locationPlugins = glob.sync('plugins/**/camunda-modeler.js', globOptions);
+
+    plugins = plugins.concat(locationPlugins);
+  });
+
+  return plugins;
 }
 
 module.exports = PluginsManager;

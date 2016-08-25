@@ -32,7 +32,11 @@ var browserOpen = require('./util/browser-open'),
 var config = Config.load(path.join(app.getPath('userData'), 'config.json'));
 
 app.pluginsManager = new PluginsManager({
-  path: '/Users/vlka/repos/bpmn-io/camunda-modeler/plugins'
+  paths: [
+    app.getPath('userData'),
+    path.dirname(app.getPath('exe')),
+    process.cwd()
+  ]
 });
 
 Platform.create(process.platform, app, config);

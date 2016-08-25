@@ -8,15 +8,36 @@ var remote = require('electron').remote;
  */
 function Plugins() {
   this.pluginsManager = remote.app.pluginsManager;
+}
 
+/**
+ * Loads all scripts.
+ *
+ * @return {Array}
+ */
+Plugins.prototype.load = function(done) {
   this.pluginsManager.getPlugins()
     .filter(p => p.style)
-    .forEach(p => loadStyleSync(p.style));
+    .forEach(p => loadStyle(p.style));
 
-  this.pluginsManager.getPlugins()
-    .filter(p => p.script)
-    .forEach(p => loadScriptSync(p.script));
-}
+  var scripts = this.pluginsManager.getPlugins()
+    .filter(p => p.script);
+
+  var counter = scripts.length;
+
+  if (counter === 0) {
+    return done();
+  }
+
+  scripts.forEach(p => {
+    loadScript(p.script, () => {
+      --counter;
+      if (counter === 0) {
+        return done();
+      }
+    });
+  });
+};
 
 /**
  * Returns all loaded plugins.
@@ -39,25 +60,27 @@ Plugins.prototype.get = function(type) {
     throw new Error('Plugin type is not provided!');
   }
 
-  return this.getAll()
+  var plugins = this.getAll()
       .filter(p => p.type === type)
       .map(p => p.module);
+
+  return plugins;
 };
 
-function loadStyleSync(href) {
+function loadStyle(href) {
   var s = document.createElement('link');
   s.href = href;
   s.rel = 'stylesheet';
-  s.async = false;
   document.head.appendChild(s);
 }
 
-function loadScriptSync(src) {
+function loadScript(src, done) {
   var s = document.createElement('script');
   s.src = src;
   s.type = 'text/javascript';
+  s.onload = done;
   s.async = false;
-  document.body.appendChild(s);
+  document.head.appendChild(s);
 }
 
 module.exports = Plugins;

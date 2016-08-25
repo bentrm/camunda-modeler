@@ -23,7 +23,7 @@ function CamundaModelerPlugin(plugin) {
     throw new Error('Descriptor in not specified!');
   }
 
-  [ 'type', 'module' ].forEach(p => {
+  [ 'type', 'module' ].forEach(function(p) {
     if (!plugin[p]) {
       throw new Error('Propery "' + p + '" must be specified!');
     }
