@@ -355,11 +355,10 @@ function App(options) {
    */
   this.emit = bind(this.events.emit, this.events);
 
-
   // bootstrap support for diagram files
 
   this.tabProviders = [
-    this.createComponent(BpmnProvider, { app: this }),
+    this.createComponent(BpmnProvider, { app: this, plugins: this.plugins }),
     this.createComponent(DmnProvider, { app: this }),
     this.createComponent(CmmnProvider, { app: this })
   ];

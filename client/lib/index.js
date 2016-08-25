@@ -41,7 +41,7 @@ domReady(function() {
     fileSystem: new FileSystem(),
     logger: new Logger(),
     workspace: new Workspace(),
-    plugins: new Plugins().load(),
+    plugins: new Plugins(),
     metaData: metaData
   });
 
